@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   useWindowDimensions,
   ScrollView,
+  BackHandler,
 } from 'react-native';
 import Logo from '../../assets/images/Logo_1.png';
 import CustomInput from '../components/CustomInput';
@@ -13,10 +14,23 @@ import CustomButton from '../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 // import SocialSignInButtons from '../../components/SocialSignInButtons';
 import {useForm, Controller} from 'react-hook-form';
+import {userLogin} from '../redux/actions/userActions';
+import {useSelector, useDispatch} from 'react-redux';
 
 const SignInScreen = () => {
   const {height} = useWindowDimensions();
   const navigation = useNavigation();
+
+  const user = useSelector(store => store.user);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (user.userdata) {
+      navigation.navigate('Home');
+    }
+    if (user.error) {
+    }
+  }, [user, navigation]);
 
   const {
     control,
@@ -25,9 +39,7 @@ const SignInScreen = () => {
   } = useForm();
 
   const onSignInPressed = data => {
-    console.log(data);
-    // validate user
-    navigation.navigate('Home');
+    dispatch(userLogin(data));
   };
 
   const onForgotPasswordPressed = () => {
@@ -38,8 +50,25 @@ const SignInScreen = () => {
     // navigation.navigate('SignUp');
   };
 
+  const disableBack = () => {
+    BackHandler.exitApp();
+    return true;
+  };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', disableBack);
+
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', disableBack);
+  }, []);
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
+      {user?.loading ? (
+        <View style={styles.loader}>
+          <Text> loading ... </Text>
+        </View>
+      ) : null}
       <View style={styles.root}>
         <Image
           source={Logo}
@@ -48,7 +77,7 @@ const SignInScreen = () => {
         />
 
         <CustomInput
-          name="username"
+          name="user_name"
           placeholder="Username"
           control={control}
           rules={{required: 'Username is required'}}
@@ -96,6 +125,15 @@ const styles = StyleSheet.create({
     width: '70%',
     maxWidth: 300,
     maxHeight: 200,
+  },
+  loader: {
+    ...StyleSheet.absoluteFill,
+    opacity: 5,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 3,
+    elevation: 3,
   },
 });
 

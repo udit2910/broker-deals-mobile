@@ -9,12 +9,16 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, Text} from 'react-native';
 import Navigation from './src/navigation';
+import {store} from './src/redux/store';
+import {Provider} from 'react-redux';
 
 const App = () => {
   return (
-    <SafeAreaView style={styles.root}>
-      <Navigation />
-    </SafeAreaView>
+    <Provider store={store}>
+      <SafeAreaView style={styles.root}>
+        <Navigation />
+      </SafeAreaView>
+    </Provider>
   );
 };
 

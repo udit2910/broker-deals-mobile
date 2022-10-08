@@ -27,6 +27,7 @@ const CustomInput = ({
               onBlur={onBlur}
               placeholder={placeholder}
               style={styles.input}
+              autoCapitalize="none"
               secureTextEntry={secureTextEntry}
             />
           </View>
