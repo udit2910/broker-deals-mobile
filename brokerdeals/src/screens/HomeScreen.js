@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Alert, BackHandler} from 'react-native';
+import {View, Text, Alert, BackHandler, Button} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 const HomeScreen = () => {
@@ -24,7 +24,7 @@ const HomeScreen = () => {
 
   return (
     <View>
-      <Text style={{fontSize: 24, alignSelf: 'center'}}>Home sweet home</Text>
+      <Text>home</Text>
     </View>
   );
 };
