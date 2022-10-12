@@ -2,7 +2,7 @@ import {
   GET_PARTY,
   SET_LOADING,
   PARTY_ERROR,
-  ADD_LOG,
+  ADD_PARTY,
   DELETE_LOG,
   UPDATE_LOG,
   SEARCH_LOGS,
@@ -26,12 +26,12 @@ export default (state = initialState, action) => {
         loading: false,
         error: null,
       };
-    // case ADD_LOG:
-    //   return {
-    //     ...state,
-    //     logs: [...state.logs, action.payload],
-    //     loading: false,
-    //   };
+    case ADD_PARTY:
+      return {
+        ...state,
+        partyData: action.payload,
+        loading: false,
+      };
     // case DELETE_LOG:
     //   return {
     //     ...state,

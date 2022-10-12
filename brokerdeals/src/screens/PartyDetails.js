@@ -8,19 +8,28 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {getParties} from '../redux/actions/partyActions';
+import {getParties, addParty} from '../redux/actions/partyActions';
 import Icons from 'react-native-vector-icons/MaterialIcons';
+import {useForm, Controller} from 'react-hook-form';
+import Modal from 'react-native-modal';
+import CustomInput from '../components/CustomInput';
+import CustomButton from '../components/CustomButton';
 
 const PartyDetails = () => {
   const user = useSelector(store => store.user);
   const parties = useSelector(store => store.party);
 
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm();
+  const [isModalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
 
   const fetchParties = () => dispatch(getParties(user.userdata));
-
   const partyList = parties?.partyData?.data;
 
   useEffect(() => {
@@ -28,11 +37,20 @@ const PartyDetails = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const addNewParty = () => {
-    //function to handle click on floating Action Button
-    Alert.alert('Add new party Details');
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
   };
 
+  const addNewParty = data => {
+    const json = {};
+    json['name'] = data?.party_name;
+    json['added_by'] = user.userdata.user_id;
+    dispatch(addParty(json));
+    fetchParties();
+    toggleModal();
+  };
+
+  const editParty = data => {};
   const deleteParty = data => {
     Alert.alert('Delete Party ?', `Are you sure to delete ${data.name}?`, [
       {
@@ -59,6 +77,7 @@ const PartyDetails = () => {
           <Text> loading ... </Text>
         </View>
       ) : null}
+
       {!partyList && !parties?.loading ? (
         <View style={styles.loader}>
           <Text> No Parties Added. Tap on Plus icon to add new party.</Text>
@@ -72,6 +91,11 @@ const PartyDetails = () => {
                 {item.name}
                 <TouchableOpacity
                   activeOpacity={0.5}
+                  onPress={() => editParty(item)}>
+                  <Icons color="blue" name="edit" size={25} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.5}
                   onPress={() => deleteParty(item)}>
                   <Icons color="green" name="delete" size={25} />
                 </TouchableOpacity>
@@ -80,9 +104,10 @@ const PartyDetails = () => {
           />
         </View>
       )}
+
       <TouchableOpacity
         activeOpacity={0.7}
-        onPress={addNewParty}
+        onPress={toggleModal}
         style={styles.touchableOpacityStyle}>
         <Image
           source={{
@@ -91,6 +116,18 @@ const PartyDetails = () => {
           style={styles.floatingButtonStyle}
         />
       </TouchableOpacity>
+
+      <Modal isVisible={isModalVisible}>
+        <View style={styles.modal}>
+          <CustomInput
+            name="party_name"
+            placeholder="Party name"
+            control={control}
+            rules={{required: 'Party name is required'}}
+          />
+          <CustomButton text="Add Party" onPress={handleSubmit(addNewParty)} />
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -126,6 +163,13 @@ const styles = StyleSheet.create({
   loader: {
     ...StyleSheet.absoluteFill,
     opacity: 5,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 3,
+    elevation: 3,
+  },
+  modal: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

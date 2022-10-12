@@ -1,7 +1,7 @@
 export const USER_LOGIN = 'USER_LOGIN';
 export const GET_PARTY = 'GET_PARTY';
 export const PARTY_ERROR = 'PARTY_ERROR';
-export const ADD_LOG = 'ADD_LOG';
+export const ADD_PARTY = 'ADD_PARTY';
 export const DELETE_LOG = 'DELETE_LOG';
 export const SET_CURRENT = 'SET_CURRENT';
 export const CLEAR_CURRENT = 'CLEAR_CURRENT';

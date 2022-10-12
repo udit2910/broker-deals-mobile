@@ -4,22 +4,9 @@ import {
   SET_CURRENT,
   CLEAR_CURRENT,
   PARTY_ERROR,
+  ADD_PARTY,
 } from './types';
 import axios from 'axios';
-
-// export const getLogs = () => {
-//   return async dispatch => {
-//     setLoading();
-
-//     const res = await fetch('/logs');
-//     const data = await res.json();
-
-//     dispatch({
-//       type: GET_LOGS,
-//       payload: data
-//     });
-//   };
-// };
 
 export const getParties = userData => async dispatch => {
   try {
@@ -38,10 +25,30 @@ export const getParties = userData => async dispatch => {
       type: PARTY_ERROR,
       payload: errMsg,
     });
-    // dispatch({
-    //   type: SET_LOADING,
-    //   payload: false,
-    // });
+  }
+};
+
+export const addParty = body => async dispatch => {
+  try {
+    setLoading();
+
+    const resp = await axios.put(
+      'https://mysterious-fjord-22450.herokuapp.com/api/v1/parties/add',
+      body,
+    );
+
+    console.log('rrrrrrr', resp.data);
+    const data = resp.data[0];
+    dispatch({
+      type: ADD_PARTY,
+      payload: data,
+    });
+  } catch (err) {
+    const errMsg = err.response.data;
+    dispatch({
+      type: PARTY_ERROR,
+      payload: errMsg,
+    });
   }
 };
 

@@ -2,10 +2,6 @@ import {
   USER_LOGIN,
   SET_LOADING,
   LOGIN_ERROR,
-  ADD_LOG,
-  DELETE_LOG,
-  UPDATE_LOG,
-  SEARCH_LOGS,
   SET_CURRENT,
   CLEAR_CURRENT,
 } from './types';
@@ -64,7 +60,6 @@ export const userLogin = body => async dispatch => {
       type: SET_LOADING,
       payload: false,
     });
-  } finally {
   }
 };
 
