@@ -30,7 +30,8 @@ const SignInScreen = () => {
     }
     if (user.error) {
     }
-  }, [user, navigation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
 
   const {
     control,

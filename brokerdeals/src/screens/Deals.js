@@ -4,7 +4,7 @@ import React from 'react';
 const Deals = () => {
   return (
     <View>
-      <Text>Deals</Text>
+      <Text>Add Deals</Text>
     </View>
   );
 };
